@@ -5,7 +5,9 @@ MAX_TRIES=5
 
 tries=0
 echo "** Starting OMD **"
-omd start
+service xinetd restart
+service ssh restart
+omd restart
 while /bin/true; do
   sleep $SLEEP_TIME
   omd status | grep -q "stopped" && {
@@ -15,6 +17,8 @@ while /bin/true; do
     fi
     tries=$(( tries + 1 ))
     echo "** ERROR: Stopped service found; trying to start again **"
-    omd start
+    omd restart
+    service xinetd restart
+    service ssh restart
   }
 done
